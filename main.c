@@ -85,7 +85,6 @@ int main(int argc, char *argv[]) {
 	mvwprintw(lettere, 0, 2, "ABCDEFGJKL");
 	mvwprintw(lettere, 2, 0, "1\n2\n3\n4\n5\n6\n7\n8\n9\n0");
 	wrefresh(lettere);
-	refreshgriglia(wingriglia, griglia);
 	while (true) {
 		//clear();
 		werase(winscore);
@@ -110,19 +109,15 @@ int main(int argc, char *argv[]) {
 		ch = wgetch(winmove);
 		switch(ch) {
 			case KEY_RIGHT:
-				refreshgriglia(wingriglia, griglia);
 				pos_x++;
 				break;
 			case KEY_LEFT:
-				refreshgriglia(wingriglia, griglia);
 				pos_x--;
 				break;
 			case KEY_UP:
-				refreshgriglia(wingriglia, griglia);
 				pos_y--;
 				break;
 			case KEY_DOWN:
-				refreshgriglia(wingriglia, griglia);
 				pos_y++;
 				break;
 			case 'c':
@@ -134,7 +129,6 @@ int main(int argc, char *argv[]) {
 					griglia[pos_y-offset][pos_x-offset] = 'x';
 					boat_plc_p2++;
 				}
-				refreshgriglia(wingriglia, griglia);
 				break;
 			case 'r':
 				if(turn == 0 && griglia[pos_y-offset][pos_x-offset] == BOAT && boat_plc_p1 >= 0 && started == false) {
@@ -145,13 +139,11 @@ int main(int argc, char *argv[]) {
 					griglia[pos_y-offset][pos_x-offset] = ' ';
 					boat_plc_p2--;
 				}
-				refreshgriglia(wingriglia, griglia);
 				break;
 			case 's':
 				started = true;
 				griglia = griglia_p1_shoot;
 				turn = 0;
-				refreshgriglia(wingriglia, griglia);
 				break;
 			case ' ':
 				wclear(winmove);
@@ -162,7 +154,6 @@ int main(int argc, char *argv[]) {
 					player_1_score++;
 					boat_plc_p2--;
 					mvwprintw(winscore, 8, 1, "P1 HIT!");
-					refreshgriglia(wingriglia, griglia);
 					break;	
 					
 				}
@@ -171,7 +162,6 @@ int main(int argc, char *argv[]) {
 					griglia[pos_y-offset][pos_x-offset] = 'M';
 					griglia = griglia_p2_shoot;
 					mvwprintw(winscore, 8, 1, "P1 MISS!");
-					refreshgriglia(wingriglia, griglia);
 					break;	
 				}
 				if (turn == 1 && griglia_p1[pos_y-offset][pos_x-offset] == BOAT && started == true) {
@@ -181,7 +171,6 @@ int main(int argc, char *argv[]) {
 					player_2_score++;
 					boat_plc_p1--;
 					mvwprintw(winscore, 8, 1, "P2 HIT!");
-					refreshgriglia(wingriglia, griglia);
 					break;	
 				}
 				if (turn == 1 && griglia_p1[pos_y-offset][pos_x-offset] == ' ' && started == true) {
@@ -189,7 +178,6 @@ int main(int argc, char *argv[]) {
 					griglia[pos_y-offset][pos_x-offset] = 'M';
 					griglia = griglia_p1_shoot;
 					mvwprintw(winscore, 8, 1, "P2 MISS!");
-					refreshgriglia(wingriglia, griglia);
 					break;	
 				}
 				break;
@@ -200,7 +188,6 @@ int main(int argc, char *argv[]) {
 					pos_x = 1;
 					pos_y = 1;
 					turn = 0;
-					refreshgriglia(wingriglia, griglia);
 					break;
 				}
 				if(turn == 0 && started == false) {
@@ -209,7 +196,6 @@ int main(int argc, char *argv[]) {
 					pos_x = 1;
 					pos_y = 1;
 					turn = 1;
-					refreshgriglia(wingriglia, griglia);
 					break;
 				}
 				break;
@@ -241,6 +227,7 @@ int main(int argc, char *argv[]) {
 		//Controllare se esiste la funzione per refreshararle tutte in una volta, refresh() non va
 		wrefresh(winmove);
 		wrefresh(winscore);
+		refreshgriglia(wingriglia, griglia);
 	}
 	endwin();
 }
