@@ -193,6 +193,7 @@ int main(int argc, char *argv[]) {
 					break;
 				} else {
 					mvwprintw(winscore, 8, 1, "P2 MIN_BOAT!");
+					break;
 				}
 				if(turn == 0 && started == false && boat_plc_p1 >= MIN_BOAT) {
 					//griglia_p1 = griglia;
@@ -204,6 +205,7 @@ int main(int argc, char *argv[]) {
 				}
 				else {
 					mvwprintw(winscore, 8, 1, "P1 MIN_BOAT!");
+					break;
 				}
 				break;
 			case 'q':
