@@ -6,7 +6,7 @@
 
 #define DELAY 5000
 #define BOAT 'x'
-#define MAX_BOAT 10
+#define MAX_BOAT 25
 int main(int argc, char *argv[]) {
 	setlocale(LC_ALL, "");
 	//Variabili
