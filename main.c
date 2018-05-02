@@ -6,7 +6,9 @@
 
 #define DELAY 5000
 #define BOAT 'x'
-#define MAX_BOAT 25
+#define MAX_BOAT 15
+#define MIN_BOAT 5
+
 void refreshgriglia(WINDOW *wingriglia,char (*griglia)[10]);
 int main(int argc, char *argv[]) {
 	setlocale(LC_ALL, "");
@@ -98,7 +100,7 @@ int main(int argc, char *argv[]) {
 		}
 		mvwprintw(winscore, 2, 1, "Boats-P1: %d", boat_plc_p1);
 		mvwprintw(winscore, 3, 1, "Boats-P2: %d", boat_plc_p2);
-		mvwprintw(winscore, 4, 1, "Max-BOAT: %d", MAX_BOAT);
+		mvwprintw(winscore, 4, 1, "MAX-BOAT: %d", MAX_BOAT);
 		mvwprintw(winscore, 5, 1, "Player TURN: %d", turn);
 		mvwprintw(winscore, 6, 1, "P1-SCORE: %d", player_1_score);
 		mvwprintw(winscore, 7, 1, "P2-SCORE: %d", player_2_score);
@@ -182,21 +184,26 @@ int main(int argc, char *argv[]) {
 				}
 				break;
 			case 10:
-				if(turn == 1 && started == false) {
+				if(turn == 1 && started == false && boat_plc_p2 >= MIN_BOAT) {
 					//griglia_p2 = griglia;
 					griglia = griglia_p1;
 					pos_x = 1;
 					pos_y = 1;
-					turn = 0;
+					
 					break;
+				} else {
+					mvwprintw(winscore, 8, 1, "P2 MIN_BOAT!");
 				}
-				if(turn == 0 && started == false) {
+				if(turn == 0 && started == false && boat_plc_p1 >= MIN_BOAT) {
 					//griglia_p1 = griglia;
 					griglia = griglia_p2;
 					pos_x = 1;
 					pos_y = 1;
 					turn = 1;
 					break;
+				}
+				else {
+					mvwprintw(winscore, 8, 1, "P1 MIN_BOAT!");
 				}
 				break;
 			case 'q':
