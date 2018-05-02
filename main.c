@@ -66,6 +66,8 @@ int main(int argc, char *argv[]) {
 	int boat_plc_p1 = 0;
 	int boat_plc_p2 = 0;
 	int turn = 0;
+	int player_1_score = 0;
+	int player_2_score = 0;
 	bool started = false;
 	WINDOW *wingriglia, *winmove, *winscore, *lettere;
 	//Inizializzo le finestre
@@ -74,7 +76,7 @@ int main(int argc, char *argv[]) {
 	curs_set(FALSE);
 	wingriglia = newwin(12, 12, 1, 1);
 	winmove = newwin(11, 11, 1, 1);
-	winscore = newwin(6, 15, 1, 15);
+	winscore = newwin(9, 17, 1, 15);
 	lettere = newwin(13, 13, 0, 0);
 	nodelay(winmove, TRUE);
 	keypad(winmove, TRUE);
@@ -93,6 +95,8 @@ int main(int argc, char *argv[]) {
 		mvwprintw(winscore, 2, 1, "Boats-P2: %d", boat_plc_p2);
 		mvwprintw(winscore, 3, 1, "Max-BOAT: %d", MAX_BOAT);
 		mvwprintw(winscore, 4, 1, "Player TURN: %d", turn);
+		mvwprintw(winscore, 5, 1, "P1-SCORE: %d", player_1_score);
+		mvwprintw(winscore, 6, 1, "P2-SCORE: %d", player_2_score);
 		//Stampo il cursore Virtuale
 		mvwprintw(winmove, pos_y, pos_x, "#");
 		//Controllo se si preme un tasto
@@ -135,37 +139,35 @@ int main(int argc, char *argv[]) {
 				griglia = griglia_p1_shoot;
 				turn = 0;
 				break;
-			case 'f':
+			case ' ':
 				wclear(winmove);
 				if (turn == 0 && griglia_p2[pos_y-offset][pos_x-offset] == BOAT && started == true) {
 					turn = 1;
 					griglia[pos_y-offset][pos_x-offset] = 'C';
-					refreshgriglia(wingriglia, griglia);
 					griglia = griglia_p2_shoot;
-					sleep(1);
+					player_1_score++;
+					boat_plc_p2--;
 					break;	
 					
 				}
 				if (turn == 0 && griglia_p2[pos_y-offset][pos_x-offset] == ' ' && started == true) {
 					turn = 1;
 					griglia[pos_y-offset][pos_x-offset] = 'M';
-					refreshgriglia(wingriglia, griglia);
 					griglia = griglia_p2_shoot;
-					sleep(1);
 					break;	
 				}
 				if (turn == 1 && griglia_p1[pos_y-offset][pos_x-offset] == BOAT && started == true) {
 					turn = 0;
-					griglia[pos_y-offset][pos_x-offset] = 'D';
+					griglia[pos_y-offset][pos_x-offset] = 'C';
 					griglia = griglia_p1_shoot;
-					sleep(1);
+					player_2_score++;
+					boat_plc_p1--;
 					break;	
 				}
 				if (turn == 1 && griglia_p1[pos_y-offset][pos_x-offset] == ' ' && started == true) {
 					turn = 0;
-					griglia[pos_y-offset][pos_x-offset] = 'P';
+					griglia[pos_y-offset][pos_x-offset] = 'M';
 					griglia = griglia_p1_shoot;
-					sleep(1);
 					break;	
 				}
 				break;
@@ -193,19 +195,23 @@ int main(int argc, char *argv[]) {
 		}
 		//Controllo della posizione del cursore virtuale
 		//Probabilmente Ottimizabile
-		if(pos_x + 1 > 11 && pos_y + 1 < 11) {
-			pos_y++;
+		if(pos_x + 1 > 11) {
 			pos_x = 1;
 		}
-		if(pos_x <= 0 && pos_y - 1 > 0) {
-			pos_y--;
-			pos_x = 9;
+		if(pos_x <= 0) {
+			pos_x = 10;
 		}
 		if(pos_x + 1 > 11) {
 			pos_x--;
 		}
 		if(pos_x - 1 < 0) {
 			pos_x++;
+		}
+		if(pos_y - 1 < 0) {
+			pos_y++;
+		}
+		if(pos_y + 1 > 11) {
+			pos_y--;
 		}
 		//Refresh delle finestre,
 		//Controllare se esiste la funzione per refreshararle tutte in una volta, refresh() non va
