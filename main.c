@@ -87,7 +87,6 @@ int main(int argc, char *argv[]) {
 	wrefresh(lettere);
 	while (true) {
 		//clear();
-		werase(winscore);
 		//Disegno i contorni di wingriglia
 		box(wingriglia, 0, 0);
 		box(winscore, 0, 0);
@@ -144,9 +143,10 @@ int main(int argc, char *argv[]) {
 				started = true;
 				griglia = griglia_p1_shoot;
 				turn = 0;
+				werase(winscore);
 				break;
 			case ' ':
-				wclear(winmove);
+				werase(winscore);
 				if (turn == 0 && griglia_p2[pos_y-offset][pos_x-offset] == BOAT && started == true) {
 					turn = 1;
 					griglia[pos_y-offset][pos_x-offset] = 'C';
