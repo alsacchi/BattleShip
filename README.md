@@ -1,8 +1,8 @@
 # PROGETTO BATTAGLIA NAVALE
-Scritto in C
-Dipendenze: 
-	Ubuntu:
-	`sudo apt install ncurses ncurses-dev`
+Scritto in C  
+Dipendenze:  
+	Ubuntu:  
+	`sudo apt install ncurses ncurses-dev`  
 ## Comandi:
 * Freccete direzionale per muovere il cursore.
 * 'C' per posizionare una barca rappresentata da una 'x'.
