@@ -2,7 +2,7 @@
 Scritto in C  
 Dipendenze:  
 	Ubuntu:  
-	`sudo apt install ncurses ncurses-dev`  
+	`sudo apt install ncurses-bin`  
 ## Comandi:
 * Freccete direzionale per muovere il cursore.
 * 'C' per posizionare una barca rappresentata da una 'x'.
