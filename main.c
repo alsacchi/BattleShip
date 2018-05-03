@@ -191,7 +191,8 @@ int main(int argc, char *argv[]) {
 					pos_y = 1;
 					
 					break;
-				} else {
+				} 
+				if(turn == 1 && started == false && boat_plc_p2 < MIN_BOAT) { 
 					mvwprintw(winscore, 8, 1, "P2 MIN_BOAT!");
 					break;
 				}
@@ -203,7 +204,7 @@ int main(int argc, char *argv[]) {
 					turn = 1;
 					break;
 				}
-				else {
+				if(turn == 0 && started == false && boat_plc_p1 < MIN_BOAT) { 
 					mvwprintw(winscore, 8, 1, "P1 MIN_BOAT!");
 					break;
 				}
