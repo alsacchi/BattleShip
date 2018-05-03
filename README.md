@@ -1,5 +1,5 @@
 # PROGETTO BATTAGLIA NAVALE
-Scritto in C
+Scritto in C.
 Dipendenze: 
 	Ubuntu:
 	`sudo apt install ncurses ncurses-dev`
