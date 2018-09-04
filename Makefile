@@ -1,4 +1,4 @@
-LIBS = -lncurses -ltinfo 
+LIBS = -lncurses
 CC = gcc
 EXE = main
 default: $(EXE)

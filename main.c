@@ -1,68 +1,78 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <ncurses.h>
 #include <unistd.h>
 #include <locale.h>
 #include <string.h>
+#include "main.h"
 
+//Costanti
 #define DELAY 5000
 #define BOAT 'x'
 #define MAX_BOAT 15
 #define MIN_BOAT 5
 
-void refreshgriglia(WINDOW *wingriglia,char (*griglia)[10]);
-void printmain(int y, int x, char *mes);
+
 int main(int argc, char *argv[]) {
 	setlocale(LC_ALL, "");
-	//Variabili
-	char griglia_p1[10][10] =  {
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}
-	};	
-	char griglia_p2[10][10] =  {
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}
-	};	
-	char griglia_p1_shoot[10][10] = {
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}
-	};
-	char griglia_p2_shoot[10][10] = {
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
-	{' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}
-	};	
-	char (*griglia)[10];
+	//Griglie di gioco, da ottimizzare
+	char **griglia_p1 =  calloc(10, sizeof(char*));
+	for(int i = 0; i < 10; i++) {
+		griglia_p1[i] = (char *) calloc(10, sizeof(char));
+	}
+	char **griglia_p2 =  calloc(10, sizeof(char*));
+	for(int i = 0; i < 10; i++) {
+		griglia_p2[i] = (char *) calloc(10, sizeof(char));
+	}
+	char **griglia_p1_shoot =  calloc(10, sizeof(char*));
+	for(int i = 0; i < 10; i++) {
+		griglia_p1_shoot[i] = (char *) calloc(10, sizeof(char));
+	}
+	char **griglia_p2_shoot =  calloc(10, sizeof(char*));
+	for(int i = 0; i < 10; i++) {
+		griglia_p2_shoot[i] = (char *) calloc(10, sizeof(char));
+	}
+	// char griglia_p2[10][10] =  {
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}
+	// };	
+	// char griglia_p1_shoot[10][10] = {
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}
+	// };
+	// char griglia_p2_shoot[10][10] = {
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
+	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}
+	// };	
+	//Vars
+	char **griglia = calloc(10, sizeof(char*));
+	for(int i = 0; i < 10; i++) {
+		griglia[i] = (char *) calloc(10, sizeof(char));
+	}
 	int pos_y = 1, pos_x = 1;
 	int ch = 0;
 	int offset = 1;
@@ -84,16 +94,16 @@ int main(int argc, char *argv[]) {
 	lettere = newwin(13, 13, 0, 0);
 	nodelay(winmove, TRUE);
 	keypad(winmove, TRUE);
-	griglia = griglia_p1;
-	//Inizio ciclo
+	memcpy(griglia, griglia_p1, 100);
 	mvwprintw(lettere, 0, 2, "ABCDEFGHIJ");
-	mvwprintw(lettere, 2, 0, "1\n2\n3\n4\n5\n6\n7\n8\n9\n0");
+	mvwprintw(lettere, 2, 0, "0\n1\n2\n3\n4\n5\n6\n7\n8\n9");
 	wrefresh(lettere);
+	//Loop-Update finestre
 	while (true) {
 		//clear();
 		//Disegno i contorni di wingriglia
 		mvwprintw(lettere, 0, 2, "ABCDEFGHIJ");
-		mvwprintw(lettere, 2, 0, "1\n2\n3\n4\n5\n6\n7\n8\n9\n0");
+		mvwprintw(lettere, 2, 0, "0\n1\n2\n3\n4\n5\n6\n7\n8\n9");
 		box(wingriglia, 0, 0);
 		box(winscore, 0, 0);
 		//Stampo lo score
@@ -134,22 +144,22 @@ int main(int argc, char *argv[]) {
 				pos_y++;
 				break;
 			case 'c':
-				if(turn == 0 && griglia[pos_y-offset][pos_x-offset] == ' ' && boat_plc_p1 < MAX_BOAT && started == false) {
+				if(turn == 0 && griglia[pos_y-offset][pos_x-offset] == 0 && boat_plc_p1 < MAX_BOAT && started == false) {
 					griglia[pos_y-offset][pos_x-offset] = 'x';
 					boat_plc_p1++;
 				} 
-				if(turn == 1 && griglia[pos_y-offset][pos_x-offset] == ' ' && boat_plc_p2 < MAX_BOAT && started == false) {
+				if(turn == 1 && griglia[pos_y-offset][pos_x-offset] == 0 && boat_plc_p2 < MAX_BOAT && started == false) {
 					griglia[pos_y-offset][pos_x-offset] = 'x';
 					boat_plc_p2++;
 				}
 				break;
 			case 'r':
 				if(turn == 0 && griglia[pos_y-offset][pos_x-offset] == BOAT && boat_plc_p1 >= 0 && started == false) {
-					griglia[pos_y-offset][pos_x-offset] = ' ';
+					griglia[pos_y-offset][pos_x-offset] = 0;
 					boat_plc_p1--;
 				}
 				if(turn == 1 && griglia[pos_y-offset][pos_x-offset] == BOAT && boat_plc_p2 >= 0 && started == false) {
-					griglia[pos_y-offset][pos_x-offset] = ' ';
+					griglia[pos_y-offset][pos_x-offset] = 0;
 					boat_plc_p2--;
 				}
 				break;
@@ -267,9 +277,10 @@ int main(int argc, char *argv[]) {
 		wrefresh(winscore);
 		refreshgriglia(wingriglia, griglia);
 	}
+	//Chiudo le finestre
 	endwin();
 }
-void refreshgriglia(WINDOW *wingriglia,char (*griglia)[10]) {
+void refreshgriglia(WINDOW *wingriglia,char **griglia) {
 	for(int i = 0;i<10; ++i) {
 		for(int j = 0; j<10; ++j) {
 			mvwprintw(wingriglia, i+1, j+1, "%c", griglia[i][j]);
