@@ -16,21 +16,21 @@
 int main(int argc, char *argv[]) {
 	setlocale(LC_ALL, "");
 	//Griglie di gioco, da ottimizzare
-	char **griglia_p1 =  calloc(10, sizeof(char*));
+	char **griglia_p1 =  calloc(10, sizeof(char));
 	for(int i = 0; i < 10; i++) {
-		griglia_p1[i] = (char *) calloc(10, sizeof(char));
+		griglia_p1[i] = calloc(10, sizeof(char));
 	}
-	char **griglia_p2 =  calloc(10, sizeof(char*));
+	char **griglia_p2 = calloc(10, sizeof(char));
 	for(int i = 0; i < 10; i++) {
-		griglia_p2[i] = (char *) calloc(10, sizeof(char));
+		griglia_p2[i] = calloc(10, sizeof(char));
 	}
-	char **griglia_p1_shoot =  calloc(10, sizeof(char*));
+	char **griglia_p1_shoot =  calloc(10, sizeof(char));
 	for(int i = 0; i < 10; i++) {
-		griglia_p1_shoot[i] = (char *) calloc(10, sizeof(char));
+		griglia_p1_shoot[i] = calloc(10, sizeof(char));
 	}
-	char **griglia_p2_shoot =  calloc(10, sizeof(char*));
+	char **griglia_p2_shoot =  calloc(10, sizeof(char));
 	for(int i = 0; i < 10; i++) {
-		griglia_p2_shoot[i] = (char *) calloc(10, sizeof(char));
+		griglia_p2_shoot[i] = calloc(10, sizeof(char));
 	}
 	// char griglia_p2[10][10] =  {
 	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
@@ -69,9 +69,9 @@ int main(int argc, char *argv[]) {
 	// {' ',' ',' ',' ',' ',' ',' ',' ',' ',' '}
 	// };	
 	//Vars
-	char **griglia = calloc(10, sizeof(char*));
+	char **griglia = calloc(10, sizeof(char));
 	for(int i = 0; i < 10; i++) {
-		griglia[i] = (char *) calloc(10, sizeof(char));
+		griglia[i] = calloc(10, sizeof(char));
 	}
 	int pos_y = 1, pos_x = 1;
 	int ch = 0;
@@ -94,7 +94,9 @@ int main(int argc, char *argv[]) {
 	lettere = newwin(13, 13, 0, 0);
 	nodelay(winmove, TRUE);
 	keypad(winmove, TRUE);
-	memcpy(griglia, griglia_p1, 100);
+	for(int i = 0; i < 10; i++) {
+		memcpy(griglia[i], griglia_p1[i], 10);
+	}
 	mvwprintw(lettere, 0, 2, "ABCDEFGHIJ");
 	mvwprintw(lettere, 2, 0, "0\n1\n2\n3\n4\n5\n6\n7\n8\n9");
 	wrefresh(lettere);
@@ -144,6 +146,7 @@ int main(int argc, char *argv[]) {
 				pos_y++;
 				break;
 			case 'c':
+				wrefresh(wingriglia);
 				if(turn == 0 && griglia[pos_y-offset][pos_x-offset] == 0 && boat_plc_p1 < MAX_BOAT && started == false) {
 					griglia[pos_y-offset][pos_x-offset] = 'x';
 					boat_plc_p1++;
@@ -154,6 +157,7 @@ int main(int argc, char *argv[]) {
 				}
 				break;
 			case 'r':
+				wrefresh(wingriglia);
 				if(turn == 0 && griglia[pos_y-offset][pos_x-offset] == BOAT && boat_plc_p1 >= 0 && started == false) {
 					griglia[pos_y-offset][pos_x-offset] = 0;
 					boat_plc_p1--;
@@ -164,51 +168,69 @@ int main(int argc, char *argv[]) {
 				}
 				break;
 			case 's':
+				werase(wingriglia);
+				wrefresh(wingriglia);
 				werase(winscore);
 				if(boat_plc_p1 < MIN_BOAT || boat_plc_p2 < MIN_BOAT) {
 					mvwprintw(winscore, 8, 1, "P2|P1 NOT SET!");
 					break;
 				}
 				started = true;
-				griglia = griglia_p1_shoot;
+				for(int i = 0; i < 10; i++) {
+					memcpy(griglia[i], griglia_p1_shoot[i], 10);
+				}
 				turn = 0;
 				break;
-			case ' ':
+			case 'b':
+				wrefresh(wingriglia);
 				werase(stdscr);
-				if (turn == 0 && griglia_p2[pos_y-offset][pos_x-offset] == BOAT && started == true && griglia_p1_shoot[pos_y-offset][pos_x-offset] == ' ') {
+				printmain(20, 20, &griglia_p2[pos_y-offset][pos_x-offset]);
+				if (turn == 0 && griglia_p2[pos_y-offset][pos_x-offset] == BOAT && started == true && griglia_p1_shoot[pos_y-offset][pos_x-offset] == 0) {
 					turn = 1;
 					griglia[pos_y-offset][pos_x-offset] = 'C';
-					griglia = griglia_p2_shoot;
+					for(int i = 0; i < 10; i++) {
+						memcpy(griglia[i], griglia_p2_shoot[i], 10);
+					}
 					player_1_score++;
 					boat_plc_p2--;
 					printmain(14, 1, "P1 HIT");
+					printmain(15, 1, &griglia_p2[pos_y-offset][pos_x-offset]);
 					wrefresh(lettere);
 					break;	
 					
 				}
-				if (turn == 0 && griglia_p2[pos_y-offset][pos_x-offset] == ' ' && started == true && griglia_p1_shoot[pos_y-offset][pos_x-offset] == ' ') {
+				if (turn == 0 && griglia_p2[pos_y-offset][pos_x-offset] == 0 && started == true && griglia_p1_shoot[pos_y-offset][pos_x-offset] == ' ') {
 					turn = 1;
 					griglia[pos_y-offset][pos_x-offset] = 'M';
-					griglia = griglia_p2_shoot;
+					for(int i = 0; i < 10; i++) {
+						memcpy(griglia[i], griglia_p2_shoot[i], 10);
+					}
 					printmain(14, 1, "P1 MISS");
+					printmain(15, 1, &griglia_p2[pos_y-offset][pos_x-offset]);
 					wrefresh(lettere);
 					break;	
 				}
 				if (turn == 1 && griglia_p1[pos_y-offset][pos_x-offset] == BOAT && started == true && griglia_p2_shoot[pos_y-offset][pos_x-offset] == ' ') {
 					turn = 0;
 					griglia[pos_y-offset][pos_x-offset] = 'C';
-					griglia = griglia_p1_shoot;
+					for(int i = 0; i < 10; i++) {
+						memcpy(griglia[i], griglia_p1_shoot[i], 10);
+					}
 					player_2_score++;
 					boat_plc_p1--;
 					printmain(14, 1, "P2 HIT");
+					printmain(15, 1, &griglia_p1[pos_y-offset][pos_x-offset]);
 					wrefresh(lettere);
 					break;	
 				}
-				if (turn == 1 && griglia_p1[pos_y-offset][pos_x-offset] == ' ' && started == true && griglia_p2_shoot[pos_y-offset][pos_x-offset] == ' ') {
+				if (turn == 1 && griglia_p1[pos_y-offset][pos_x-offset] == 0 && started == true && griglia_p2_shoot[pos_y-offset][pos_x-offset] == 0) {
 					turn = 0;
 					griglia[pos_y-offset][pos_x-offset] = 'M';
-					griglia = griglia_p1_shoot;
+					for(int i = 0; i < 10; i++) {
+						memcpy(griglia[i], griglia_p1_shoot[i], 10);
+					}
 					printmain(14, 1, "P2 MISS");
+					printmain(15, 1, &griglia_p1[pos_y-offset][pos_x-offset]);
 					wrefresh(lettere);
 					break;	
 				}
@@ -217,7 +239,10 @@ int main(int argc, char *argv[]) {
 				werase(winscore); 
 				if(turn == 0 && started == false && boat_plc_p1 >= MIN_BOAT) {
 					//griglia_p1 = griglia;
-					griglia = griglia_p2;
+					werase(wingriglia);
+					for(int i = 0; i < 10; i++) {
+						memcpy(griglia[i], griglia_p2[i], 10);
+					}
 					pos_x = 1;
 					pos_y = 1;
 					turn = 1;
@@ -229,6 +254,18 @@ int main(int argc, char *argv[]) {
 				}
 				break;
 			case 'q':
+				for(int i = 0; i < 10; i++) {
+					free(griglia_p1[i]);
+					free(griglia_p2[i]);
+					free(griglia_p1_shoot[i]);
+					free(griglia_p2_shoot[i]);
+					free(griglia[i]);
+				}
+				free(griglia_p1);
+				free(griglia_p2);
+				free(griglia_p1_shoot);
+				free(griglia_p2_shoot);
+				free(griglia);
 				endwin();
 				return 0;
 		}
